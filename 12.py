@@ -1,4 +1,4 @@
-import math
+import math, time
 
 def triangles():
     t = 1
@@ -9,23 +9,29 @@ def triangles():
 
 table = {}
 
-def factors(num):
-    f = set([num])
-    if num == 1:
-        return set([1])
-    if num in table:
-        return table[num]
-    for i in reversed(range(1, math.ceil(num/2)+1)):
-        if num % i == 0:
-            f = f | factors(i)
-    table[num] = f
-    return f
+def factors(n):
+    count = 0
+    lim = n
+    i = 1
+    while i < lim:
+        if n % i == 0:
+            lim = n//i
+            count += 2
+        i += 1
+    return count
 
 
-for t in triangles():
-    l = len(factors(t))
-    if l > 500:
-        print("%d has %d" % (t, l))
+max = 0
+start = time.time()
+last = start
+for i in triangles():
+    f = factors(i)
+    if f > max:
+        now = time.time()
+        max = f
+        print("%10d --> %3d === %4d (%4.2f)" % (i, f, int(now-start), now-last))
+        last = now
+    if f > 500:
+        print("dast is: ", i)
         break
-
 
